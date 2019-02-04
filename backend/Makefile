@@ -4,3 +4,6 @@ init:
 
 install:
 	./venv/bin/pip install -r requirements.txt
+
+run-dev:
+	./venv/bin/python run.py

@@ -6,8 +6,11 @@ from tornado.web import Application
 from .graphql import GraphQLHandler
 
 
-class MainApplicationHandler():
-    pass
+class MainApplicationHandler(GraphQLHandler):
+
+    def initialize(self, opts):
+        super(MainApplicationHandler, self).initialize()
+        self.opts = opts
 
 
 class PhotoViewerApiApplication(Application):
