@@ -1,5 +1,10 @@
-import graphene
+# -*- coding: utf-8 -*-
+
+from __future__ import absolute_import, division, print_function
+
 from collections import OrderedDict
+
+import graphene
 
 
 class Emotion(graphene.ObjectType):

@@ -2,10 +2,10 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 from tornado.escape import json_decode, json_encode
 from tornado.log import app_log
 from tornado.web import RequestHandler
+
 from .error_handler import GraphQLExecutionError, graphql_error_handler
 
 

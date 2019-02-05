@@ -2,15 +2,15 @@
 
 from __future__ import absolute_import, division, print_function
 
+import sys
+import traceback
 from functools import wraps
-from tornado.log import app_log
-from tornado.escape import json_encode
 
-from tornado.web import HTTPError
 from graphql.error import GraphQLError
 from graphql.error import format_error as format_graphql_error
-import traceback
-import sys
+from tornado.escape import json_encode
+from tornado.log import app_log
+from tornado.web import HTTPError
 
 
 def error_status(exception):

@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division, print_function
 
 from tornado.web import Application
+
 from .graphql import GraphQLHandler
 from .schema import schema
 

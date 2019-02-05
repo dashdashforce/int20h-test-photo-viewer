@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import, division, print_function
+
 import sys
+
 import tornado.ioloop
 import tornado.web
 from tornado.httpserver import HTTPServer
 from traitlets import Bool, Dict, Integer, Unicode
 from traitlets.config.application import Application, catch_config_error
+
 from .version import __version__
 from .web_app import PhotoViewerApiApplication
 
