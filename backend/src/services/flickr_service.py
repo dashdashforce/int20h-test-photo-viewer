@@ -46,7 +46,7 @@ class FlickApiService():
         version = "1.0"
 
         sig_base = "GET&" + quote(requesr_url) + "&"
-        sig_base
+        sig_base += quote("oauth_consumer_key=" + quote())
         
 
     async def fetch_async(self, page):
