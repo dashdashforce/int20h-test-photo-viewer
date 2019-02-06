@@ -33,7 +33,7 @@ class Query(graphene.ObjectType):
 
     emotions = graphene.List(Emotion, limit=graphene.Int(default_value=20))
 
-    def resolve_photos(self, info, filters):
+    def resolve_photos(self, info, filters, limit):
         return []
 
     def resolve_emotions(self, info, limit):
