@@ -16,6 +16,16 @@ class FacePlusPlusService:
 
     def __init__(self):
         self.async_http_client = AsyncHTTPClient()
+        self.emotions = [
+            'sadness',
+            'neutral',
+            'disgust',
+            'anger',
+            'surprise',
+            'fear',
+            'happiness'
+        ]
+        self.attributes = ['emotion']
 
     def _build_photo_detect_uri(self, photo_uri):
         api_uri = os.getenv("FACEPLUSPLUS_URI")
@@ -26,19 +36,25 @@ class FacePlusPlusService:
         uri = self._build_photo_detect_uri(photo_uri)
         api_key = os.getenv("FACEPLUSPLUS_API_KEY")
         api_secret = os.getenv("FACEPLUSPLUS_API_SECRET")
-        attributes = ['emotion', 'gender']
+        if len(self.attributes) == 1:
+            attributes = self.attributes[0]
+        else:
+            attributes = ','.join(attributes)
 
         body = (
             ('api_key', api_key),
             ('api_secret', api_secret),
             ('image_url', photo_uri),
-            ('return_attributes', ','.join(attributes))
+            ('return_attributes', attributes)
         )
         return HTTPRequest(
             url=uri,
             method='POST',
             body=urlencode(body)
         )
+
+    def get_emotions(self):
+        return self.emotions
 
     async def get_photo_face_data(self, photo_uri):
         request = self._build_request(photo_uri)
