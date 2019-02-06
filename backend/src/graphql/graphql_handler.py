@@ -2,11 +2,17 @@
 
 from __future__ import absolute_import, division, print_function
 
+from graphql.execution.executors.asyncio import AsyncioExecutor
 from tornado.escape import json_decode, json_encode
 from tornado.log import app_log
 from tornado.web import RequestHandler
 
 from .error_handler import GraphQLExecutionError, graphql_error_handler
+
+
+"""
+    Deprecated
+"""
 
 
 class GraphQLHandler(RequestHandler):
@@ -36,7 +42,8 @@ class GraphQLHandler(RequestHandler):
             variable_values=graphql_request.get('variables'),
             operation_name=graphql_request.get('operationName'),
             context_value=graphql_request.get('context'),
-            middleware=self.middleware
+            middleware=self.middleware,
+            executor=AsyncioExecutor()
         )
 
     @property
