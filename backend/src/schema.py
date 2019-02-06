@@ -5,10 +5,10 @@ from __future__ import absolute_import, division, print_function
 from collections import OrderedDict
 
 import graphene
+from .services import service_locator
 
 
 class Emotion(graphene.ObjectType):
-    id = graphene.ID()
     title = graphene.String()
 
 
@@ -37,7 +37,9 @@ class Query(graphene.ObjectType):
         return []
 
     def resolve_emotions(self, info, limit):
-        return []
+        faceplusplus_service = service_locator.faceplusplus_service
+        emotions = faceplusplus_service.get_emotions()[:limit]
+        return map(lambda title: Emotion(title), emotions)
 
 
 schema = graphene.Schema(query=Query)
