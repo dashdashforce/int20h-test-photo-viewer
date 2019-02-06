@@ -4,6 +4,12 @@ from tornado.escape import json_decode, json_encode
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 import os
+import time
+from hashlib import md5
+from urllib.parse import quote
+from random import randint
+
+
 
 from ..repository.photos_repository import PhotosRepository
 
@@ -30,6 +36,18 @@ class FlickApiService():
             photo._id = photo.id
             result.append(photo)
         return result
+
+    def dispatch_request(self):
+        consumer_key = os.getenv("FLICKR_API_KEY")
+        requesr_url = "https://www.flickr.com/services/oauth/request_token"
+        nonce = md5(str(randint(0, 1000000)).encode())
+        signature_method = "HMAC-SHA1"
+        time_stamp = time.time()
+        version = "1.0"
+
+        sig_base = "GET&" + quote(requesr_url) + "&"
+        sig_base
+        
 
     async def fetch_async(self, page):
         await self.async_client.fetch(self.get_album_request_uri(page), lambda response: self.save_photos(json_decode(response).photoset.photo))
