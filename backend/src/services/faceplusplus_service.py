@@ -4,10 +4,11 @@ from __future__ import absolute_import, division, print_function
 
 import os
 from urllib.parse import urlencode
-from dotenv import load_dotenv, find_dotenv
-from tornado.httpclient import AsyncHTTPClient, HTTPRequest
-from tornado.escape import json_decode, json_encode
 
+from dotenv import find_dotenv, load_dotenv
+from tornado.escape import json_decode, json_encode
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+from tornado.log import app_log
 
 load_dotenv(find_dotenv())
 
@@ -58,5 +59,7 @@ class FacePlusPlusService:
 
     async def get_photo_face_data(self, photo_uri):
         request = self._build_request(photo_uri)
+        app_log.debug("Face++ request: {}".format(request.body))
         response = await self.async_http_client.fetch(request)
-        return json_decode(response.data)
+        app_log.debug("Face++ response: {}".format(response.body))
+        return json_decode(response.body)
