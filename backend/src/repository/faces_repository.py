@@ -2,7 +2,9 @@
 
 from __future__ import absolute_import, division, print_function
 
-
+"""
+    TODO Integrate repository with db
+"""
 class FacesRepository:
 
     def __init__(self):

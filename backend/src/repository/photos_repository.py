@@ -14,3 +14,16 @@ class PhotosRepository():
     def batch_insert(self, photos):
 
         self.collection.insert_many(photos)
+
+    """
+        TODO Implement cached photo async retrieving. Maybe add some page arguments
+    """
+
+    async def get_photos(self):
+        return None
+
+    """
+        TODO Implement async photo caching
+    """
+    async def save_photos(self, photos):
+        pass
