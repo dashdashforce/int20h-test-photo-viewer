@@ -1,6 +1,6 @@
-from src.services import FlickApiService
+from src.services import service_locator
 from pprint import pprint
-flickr_service = FlickApiService()    
+flickr_service = service_locator.flickr_service
 
 page = 1
 
