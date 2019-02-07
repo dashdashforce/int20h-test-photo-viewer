@@ -8,6 +8,8 @@ import graphene
 from tornado import gen
 
 from .services import service_locator
+from tornado.log import app_log
+from pprint import pprint
 
 
 class Emotion(graphene.ObjectType):
@@ -30,20 +32,10 @@ class Face(graphene.ObjectType):
     face_rectangle = graphene.Field(FaceRectangle)
     emotion = graphene.List(FaceEmotion)
 
-
-
-class Photo(graphene.ObjectType):
-    id = graphene.ID()
-    title = graphene.String()
-    url = graphene.String()
-    width = graphene.Int()
-    height = graphene.Int()
-
-    faces = graphene.List(Face)
-
-    def map_face(self, face):
-        face_rectangle_dict = face['face_rectangle']
-        emotion_factors = face['attributes']['emotion']
+    @classmethod
+    def map(cls, face_dict):
+        face_rectangle_dict = face_dict['face_rectangle']
+        emotion_factors = face_dict['attributes']['emotion']
 
         face_rectangle = FaceRectangle(
             face_rectangle_dict['height'],
@@ -58,30 +50,75 @@ class Photo(graphene.ObjectType):
 
         return Face(face_rectangle, face_emotions)
 
+
+class PhotoSize(graphene.ObjectType):
+    width = graphene.Int()
+    height = graphene.Int()
+    url = graphene.String()
+
+
+class PhotoSizes(graphene.ObjectType):
+    small = graphene.Field(PhotoSize)
+    medium = graphene.Field(PhotoSize)
+    large = graphene.Field(PhotoSize)
+
+
+class Photo(graphene.ObjectType):
+    id = graphene.ID()
+    title = graphene.String()
+    sizes = graphene.Field(PhotoSizes)
+
+    faces = graphene.List(Face)
+
     async def resolve_faces(self, info):
         faceplusplus_service = service_locator.faceplusplus_service
-        faces = await faceplusplus_service.get_photo_faces(self.url)
-        return map(self.map_face, faces)
+        faces = await faceplusplus_service.get_photo_faces(self.sizes.large.url)
+        return map(Face.map, faces)
+
+    @classmethod
+    def map(cls, photo_dict):
+        id = photo_dict['id']
+        title = photo_dict['title']
+        large_size = PhotoSize(
+            photo_dict['width_l'],
+            photo_dict['height_l'],
+            photo_dict['url_l']
+        )
+        medium_size = PhotoSize(
+            photo_dict['width_m'],
+            photo_dict['height_m'],
+            photo_dict['url_m']
+        )
+
+        small_size = PhotoSize(
+            photo_dict['width_s'],
+            photo_dict['height_s'],
+            photo_dict['url_s']
+        )
+        return Photo(
+            id,
+            title,
+            PhotoSizes(small_size, medium_size, large_size)
+        )
 
 
 class Query(graphene.ObjectType):
     photos = graphene.List(Photo,
                            filters=graphene.List(
                                graphene.String, default_value=[]),
-                           limit=graphene.Int(default_value=20))
+                           limit=graphene.Int(default_value=20),
+                           page=graphene.Int(default_value=1))
 
     emotions = graphene.List(Emotion, limit=graphene.Int(default_value=20))
 
-    def resolve_photos(self, info, filters, limit):
-        return [
-            Photo(
-                '1',
-                'Sadness photo',
-                'https://images.pexels.com/photos/568021/pexels-photo-568021.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-                1260,
-                750
-            ),
-        ]
+    """
+        TODO Implement photo filtering by emotions
+        `filters` param is list of emotion titles
+    """
+    async def resolve_photos(self, info, filters, limit, page):
+        flickr_service = service_locator.flickr_service
+        photos = await flickr_service.get_photos(page, limit)
+        return map(Photo.map, photos)
 
     def resolve_emotions(self, info, limit):
         faceplusplus_service = service_locator.faceplusplus_service
