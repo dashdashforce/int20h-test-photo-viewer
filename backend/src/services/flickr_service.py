@@ -46,7 +46,7 @@ class FlickApiService():
         )
 
     def _save_photos(self, photos):
-        self.repository.batch_insert(self.transform_photos(photos))
+        self.repository.batch_insert(self._transform_photos(photos))
 
     def _transform_photos(self, photos):
         result = []
@@ -75,7 +75,7 @@ class FlickApiService():
         return hmac.new(sig_key.encode(), sig_base.encode(), hashlib.sha1).hexdigest()
 
     async def _fetch_async(self, page):
-        await self.async_client.fetch(self.get_album_request_uri(page), lambda response: self.save_photos(json_decode(response).photoset.photo))
+        await self.async_client.fetch(self.get_album_request_uri(page), lambda response: self._save_photos(json_decode(response).photoset.photo))
 
     async def get_photos(self, page, limit):
         cached_photos = await self.repository.get_photos()
