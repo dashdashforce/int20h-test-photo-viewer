@@ -13,6 +13,11 @@ from tornado.log import app_log
 from tornado.web import HTTPError
 
 
+"""
+    Deprecated
+"""
+
+
 def error_status(exception):
     if isinstance(exception, HTTPError):
         return exception.status_code

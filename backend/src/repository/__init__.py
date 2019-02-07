@@ -2,7 +2,4 @@
 
 from __future__ import absolute_import, division, print_function
 
-from .service_locator import ServiceLocator
-
-
-service_locator = ServiceLocator()
+from .faces_repository import FacesRepository
