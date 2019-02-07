@@ -10,6 +10,8 @@ from tornado.escape import json_decode, json_encode
 from tornado.httpclient import AsyncHTTPClient, HTTPRequest
 from tornado.log import app_log
 
+from src.repository import FacesRepository
+
 load_dotenv(find_dotenv())
 
 
@@ -17,6 +19,7 @@ class FacePlusPlusService:
 
     def __init__(self):
         self.async_http_client = AsyncHTTPClient()
+        self.faces_repository = FacesRepository()
         self.emotions = [
             'sadness',
             'neutral',
@@ -28,10 +31,27 @@ class FacePlusPlusService:
         ]
         self.attributes = ['emotion']
 
-    def _build_photo_detect_uri(self, photo_uri):
-        api_uri = os.getenv("FACEPLUSPLUS_URI")
-        api_method = os.getenv("FACEPLUSPLUS_DETECT_METHOD")
-        return "{root}/{method}".format(root=api_uri, method=api_method)
+    def get_emotions(self):
+        return self.emotions
+
+    async def get_photo_faces(self, photo_uri):
+        cached_faces = await self.faces_repository.get_faces(photo_uri)
+
+        if not cached_faces:
+            faces = await self._fetch_photo_faces(photo_uri)
+            await self.faces_repository.save_faces(faces, photo_uri)
+        else:
+            app_log.debug("Get cached faces for {}".format(photo_uri))
+            faces = cached_faces
+
+        return faces
+
+    async def _fetch_photo_faces(self, photo_uri):
+        request = self._build_request(photo_uri)
+        app_log.debug("Face++ request: {}".format(request.body))
+        response = await self.async_http_client.fetch(request)
+        app_log.debug("Face++ response: {}".format(response.body))
+        return json_decode(response.body)['faces']
 
     def _build_request(self, photo_uri):
         uri = self._build_photo_detect_uri(photo_uri)
@@ -48,18 +68,14 @@ class FacePlusPlusService:
             ('image_url', photo_uri),
             ('return_attributes', attributes)
         )
+
         return HTTPRequest(
             url=uri,
             method='POST',
             body=urlencode(body)
         )
 
-    def get_emotions(self):
-        return self.emotions
-
-    async def get_photo_face_data(self, photo_uri):
-        request = self._build_request(photo_uri)
-        app_log.debug("Face++ request: {}".format(request.body))
-        response = await self.async_http_client.fetch(request)
-        app_log.debug("Face++ response: {}".format(response.body))
-        return json_decode(response.body)
+    def _build_photo_detect_uri(self, photo_uri):
+        api_uri = os.getenv("FACEPLUSPLUS_URI")
+        api_method = os.getenv("FACEPLUSPLUS_DETECT_METHOD")
+        return "{root}/{method}".format(root=api_uri, method=api_method)

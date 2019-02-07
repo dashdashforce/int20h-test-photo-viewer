@@ -31,6 +31,7 @@ class Face(graphene.ObjectType):
     emotion = graphene.List(FaceEmotion)
 
 
+
 class Photo(graphene.ObjectType):
     id = graphene.ID()
     title = graphene.String()
@@ -59,8 +60,8 @@ class Photo(graphene.ObjectType):
 
     async def resolve_faces(self, info):
         faceplusplus_service = service_locator.faceplusplus_service
-        faces_data = await faceplusplus_service.get_photo_face_data(self.url)
-        return map(self.map_face, faces_data['faces'])
+        faces = await faceplusplus_service.get_photo_faces(self.url)
+        return map(self.map_face, faces)
 
 
 class Query(graphene.ObjectType):
