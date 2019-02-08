@@ -11,20 +11,19 @@ import pprint
 class FacesRepository:
 
     def __init__(self):
-        print('begin')
         self.collection = ((motor.motor_tornado.MotorClient(os.getenv("MONGODB_URL")))[
                         os.getenv("MONGODB_DB")]).faces
-        self.faces_cache = {}
 
     async def save_faces(self, faces, photo_uri):
-        self.faces_cache[photo_uri] = faces
+        document = {
+            'faces': faces,
+            'photo_uri': photo_uri
+        }
+        result = await self.collection.insert_one(document)
 
     async def get_faces(self, photo_uri):
-        if photo_uri in self.faces_cache:
-            return self.faces_cache[photo_uri]
+        result = await self.collection.find_one({'photo_uri': photo_uri})
+        if result:
+            return result.faces
         else:
             return None
-    
-    async def test(self):
-        document = await self.collection.find_one({'_id': '//'})
-        pprint.pprint(document)
