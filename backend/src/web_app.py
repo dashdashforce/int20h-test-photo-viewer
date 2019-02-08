@@ -6,7 +6,6 @@ from graphene_tornado.tornado_graphql_handler import TornadoGraphQLHandler
 from tornado.web import Application
 from tornado.log import app_log
 
-from .graphql import GraphQLHandler
 from .schema import schema
 
 
