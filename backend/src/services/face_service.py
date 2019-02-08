@@ -15,7 +15,7 @@ from src.repository import FacesRepository
 load_dotenv(find_dotenv())
 
 
-class FacePlusPlusService:
+class FaceService:
 
     def __init__(self):
         self.async_http_client = AsyncHTTPClient()

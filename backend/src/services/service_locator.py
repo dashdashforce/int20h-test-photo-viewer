@@ -2,12 +2,12 @@
 
 from __future__ import absolute_import, division, print_function
 
-from .faceplusplus_service import FacePlusPlusService
+from .face_service import FaceService
 from .photo_service import PhotoService
 
 
 class ServiceLocator:
 
     def __init__(self):
-        self.faceplusplus_service = FacePlusPlusService()
+        self.face_service = FaceService()
         self.photo_service = PhotoService()
