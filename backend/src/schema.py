@@ -35,7 +35,10 @@ class Face(graphene.ObjectType):
     @classmethod
     def map(cls, face_dict):
         face_rectangle_dict = face_dict['face_rectangle']
-        emotion_factors = face_dict['attributes']['emotion']
+        if 'attributes' in face_dict:
+            emotion_factors = face_dict['attributes']['emotion']
+        else:
+            emotion_factors = {}
 
         face_rectangle = FaceRectangle(
             face_rectangle_dict['height'],
@@ -72,7 +75,7 @@ class Photo(graphene.ObjectType):
 
     async def resolve_faces(self, info):
         faceplusplus_service = service_locator.faceplusplus_service
-        faces = await faceplusplus_service.get_photo_faces(self.sizes.large.url)
+        faces = await faceplusplus_service.get_photo_faces(self.sizes.large.url, self.id)
         return map(Face.map, faces)
 
     @classmethod
