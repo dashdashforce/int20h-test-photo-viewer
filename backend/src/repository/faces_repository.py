@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, division, print_function
+import motor.motor_tornado
+import os
+import pprint
+#from __future__ import absolute_import, division, print_function
 
 """
     TODO Integrate repository with db
@@ -8,6 +11,9 @@ from __future__ import absolute_import, division, print_function
 class FacesRepository:
 
     def __init__(self):
+        print('begin')
+        self.collection = ((motor.motor_tornado.MotorClient(os.getenv("MONGODB_URL")))[
+                        os.getenv("MONGODB_DB")]).faces
         self.faces_cache = {}
 
     async def save_faces(self, faces, photo_uri):
@@ -18,3 +24,7 @@ class FacesRepository:
             return self.faces_cache[photo_uri]
         else:
             return None
+    
+    async def test(self):
+        document = await self.collection.find_one({'_id': '//'})
+        pprint.pprint(document)

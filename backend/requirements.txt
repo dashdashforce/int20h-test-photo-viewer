@@ -11,3 +11,4 @@ traitlets==4.3.1
 
 pymongo==3.7.2
 dnspython==1.16.0
+motor==2.0
