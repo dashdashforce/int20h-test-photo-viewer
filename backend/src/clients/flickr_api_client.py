@@ -27,7 +27,7 @@ class FlickrApiClient:
         uri = self._build_album_request_uri(page, limit)
         app_log.debug('FlickrService: fetching photos from {}'.format(uri))
         try:
-            response = await self.async_client.fetch(uri)
+            response = await self.client.fetch(uri)
         except Exception as e:
             app_log.error(
                 'FlickrService: error while fetching photos: {}'.format(e)
