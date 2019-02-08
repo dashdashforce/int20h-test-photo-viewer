@@ -41,20 +41,28 @@ class FacePlusPlusService:
             faces = await self._fetch_photo_faces(photo_uri)
             await self.faces_repository.save_faces(faces, photo_uri)
         else:
-            app_log.debug("Get cached faces for {}".format(photo_uri))
+            app_log.debug(
+                "Face++Service: get cached faces for {}".format(photo_uri))
             faces = cached_faces
 
         return faces
 
     async def _fetch_photo_faces(self, photo_uri):
         request = self._build_request(photo_uri)
-        app_log.debug("Face++ request: {}".format(request.body))
-        response = await self.async_http_client.fetch(request)
-        app_log.debug("Face++ response: {}".format(response.body))
+        try:
+            response = await self.async_http_client.fetch(request)
+        except Exception as e:
+            app_log.error("Face++Service: error while fetching faces for photo {photo}: {error}".format(
+                photo=photo_uri,
+                error=e
+            ))
+            raise e
         return json_decode(response.body)['faces']
 
     def _build_request(self, photo_uri):
         uri = self._build_photo_detect_uri(photo_uri)
+        app_log.debug(
+            "Face++Service: fetching faces from: {} for photo: {}".format(uri, photo_uri))
         api_key = os.getenv("FACEPLUSPLUS_API_KEY")
         api_secret = os.getenv("FACEPLUSPLUS_API_SECRET")
         if len(self.attributes) == 1:

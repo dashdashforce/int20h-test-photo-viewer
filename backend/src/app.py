@@ -4,9 +4,11 @@ from __future__ import absolute_import, division, print_function
 
 import sys
 import os
+import logging
 
 import tornado.ioloop
 import tornado.web
+from tornado.log import LogFormatter, app_log, access_log, gen_log
 from tornado.httpserver import HTTPServer
 from traitlets import Bool, Dict, Integer, Unicode
 from traitlets.config.application import Application, catch_config_error
@@ -16,9 +18,38 @@ from .version import __version__
 from .web_app import PhotoViewerApiApplication
 
 load_dotenv(find_dotenv())
+
+
 class PhotoViewerApplication(Application):
     name = '--force photo viewer app'
     version = __version__
+
+    debug = Bool(
+        os.getenv('DEBUG', default=False) == 'True',
+        config=False,
+        help='Debug mode'
+    )
+
+    aliases = {
+        'log-level': 'PhotoViewerApplication.log_level',
+        'ip': 'PhotoViewerApplication.ip',
+        'port': 'PhotoViewerApplication.port',
+    }
+
+    _log_formatter_cls = LogFormatter
+
+    def _log_level_default(self):
+        if self.debug:
+            return logging.DEBUG
+        else:
+            return logging.INFO
+
+    def _log_datefmt_default(self):
+        return "%H:%M:%S"
+
+    def _log_format_default(self):
+        return (u'%(color)s[%(levelname)1.1s %(asctime)s.%(msecs).03d '
+                u'%(name)s]%(end_color)s %(message)s')
 
     ip = Unicode(
         '', config=True,
@@ -26,7 +57,7 @@ class PhotoViewerApplication(Application):
     )
 
     port = Integer(
-        os.getenv('PORT'), config=True,
+        int(os.getenv('PORT')), config=True,
         help='The port the server will listen on.'
     )
 
@@ -35,7 +66,19 @@ class PhotoViewerApplication(Application):
         help='tornado.web.Application settings.'
     )
 
+    def init_logging(self):
+        self.log.propagate = False
+        for log in app_log, access_log, gen_log:
+            log.name = self.log.name
+
+        logger = logging.getLogger('tornado')
+        logger.propagate = True
+        logger.parent = self.log
+        logger.setLevel(self.log.level)
+
     def init_webapp(self):
+        self.application_settings['debug'] = self.debug
+
         self.web_app = PhotoViewerApiApplication(self.application_settings)
         self.http_server = HTTPServer(self.web_app)
         self.http_server.listen(self.port, self.ip)
@@ -52,11 +95,15 @@ class PhotoViewerApplication(Application):
 
         super(PhotoViewerApplication, self).initialize(argv)
 
+        self.init_logging()
         self.init_webapp()
 
     def start(self):
         super(PhotoViewerApplication, self).start()
         self.io_loop = tornado.ioloop.IOLoop.current()
+        app_log.info('Server started on port: {}'.format(self.port))
+        app_log.debug('Debug mode: {}'.format(self.debug))
+
         try:
             self.io_loop.start()
         except KeyboardInterrupt:
