@@ -1,6 +1,7 @@
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpclient import HTTPClient
 from tornado.escape import json_decode, json_encode
+from tornado.log import app_log
 from dotenv import load_dotenv, find_dotenv
 
 import os
@@ -16,6 +17,7 @@ import hmac
 from ..repository.photos_repository import PhotosRepository
 
 load_dotenv(find_dotenv())
+
 
 class FlickApiService():
 
@@ -90,5 +92,12 @@ class FlickApiService():
 
     async def _fetch_photos(self, page, limit):
         uri = self.get_album_request_uri(page, limit)
-        response = await self.async_client.fetch(uri)
+        app_log.debug('FlickrService: fetching photos from {}'.format(uri))
+        try:
+            response = await self.async_client.fetch(uri)
+        except Exception as e:
+            app_log.error(
+                'FlickrService: error while fetching photos: {}'.format(e)
+            )
+            raise e
         return json_decode(response.body)['photoset']['photo']

@@ -4,21 +4,20 @@ from __future__ import absolute_import, division, print_function
 
 from graphene_tornado.tornado_graphql_handler import TornadoGraphQLHandler
 from tornado.web import Application
+from tornado.log import app_log
 
 from .graphql import GraphQLHandler
 from .schema import schema
 
 
-class MainApplicationHandler(GraphQLHandler):
+class MainApplicationHandler(TornadoGraphQLHandler):
 
-    def initialize(self, opts):
-        super(MainApplicationHandler, self).initialize()
-        self.opts = opts
-        self._schema = schema
-
-    @property
-    def schema(self):
-        return self._schema
+    
+    async def execute_graphql_request(self, method, query, variables, operation_name, show_graphiql=False):
+        app_log.debug("Execution GraphQL request: {}".format(query))
+        return await super(MainApplicationHandler, self).execute_graphql_request(
+                method, query, variables, operation_name, show_graphiql
+        )
 
 
 class PhotoViewerApiApplication(Application):
@@ -27,7 +26,7 @@ class PhotoViewerApiApplication(Application):
         self.opts = dict(settings)
 
         handlers = [
-            (r'/graphql', TornadoGraphQLHandler, dict(
+            (r'/graphql', MainApplicationHandler, dict(
                 graphiql=True, schema=schema
             )),
         ]
