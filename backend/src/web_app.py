@@ -11,11 +11,10 @@ from .schema import schema
 
 class MainApplicationHandler(TornadoGraphQLHandler):
 
-    
     async def execute_graphql_request(self, method, query, variables, operation_name, show_graphiql=False):
         app_log.debug("Execution GraphQL request: {}".format(query))
         return await super(MainApplicationHandler, self).execute_graphql_request(
-                method, query, variables, operation_name, show_graphiql
+            method, query, variables, operation_name, show_graphiql
         )
 
 
