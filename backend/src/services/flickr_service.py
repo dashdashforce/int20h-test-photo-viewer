@@ -2,7 +2,7 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.httpclient import HTTPClient
 from tornado.escape import json_decode, json_encode
 from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+
 import os
 import time
 import hashlib
@@ -15,6 +15,7 @@ import hmac
 
 from ..repository.photos_repository import PhotosRepository
 
+load_dotenv(find_dotenv())
 
 class FlickApiService():
 
