@@ -3,17 +3,19 @@
 from __future__ import absolute_import, division, print_function
 
 import sys
+import os
 
 import tornado.ioloop
 import tornado.web
 from tornado.httpserver import HTTPServer
 from traitlets import Bool, Dict, Integer, Unicode
 from traitlets.config.application import Application, catch_config_error
+from dotenv import find_dotenv, load_dotenv
 
 from .version import __version__
 from .web_app import PhotoViewerApiApplication
 
-
+load_dotenv(find_dotenv())
 class PhotoViewerApplication(Application):
     name = '--force photo viewer app'
     version = __version__
@@ -24,7 +26,7 @@ class PhotoViewerApplication(Application):
     )
 
     port = Integer(
-        8888, config=True,
+        os.getenv('PORT'), config=True,
         help='The port the server will listen on.'
     )
 
