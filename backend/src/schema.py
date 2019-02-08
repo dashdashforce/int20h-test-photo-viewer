@@ -74,8 +74,8 @@ class Photo(graphene.ObjectType):
     faces = graphene.List(Face)
 
     async def resolve_faces(self, info):
-        faceplusplus_service = service_locator.faceplusplus_service
-        faces = await faceplusplus_service.get_photo_faces(self.sizes.large.url, self.id)
+        face_service = service_locator.face_service
+        faces = await face_service.get_photo_faces(self.sizes.large.url, self.id)
         return map(Face.map, faces)
 
     @classmethod
@@ -124,8 +124,8 @@ class Query(graphene.ObjectType):
         return map(Photo.map, photos)
 
     def resolve_emotions(self, info, limit):
-        faceplusplus_service = service_locator.faceplusplus_service
-        emotions = faceplusplus_service.get_emotions()[:limit]
+        face_service = service_locator.face_service
+        emotions = face_service.get_emotions()[:limit]
         return map(lambda title: Emotion(title), emotions)
 
 
