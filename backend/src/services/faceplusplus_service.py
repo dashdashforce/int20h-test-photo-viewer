@@ -34,15 +34,14 @@ class FacePlusPlusService:
     def get_emotions(self):
         return self.emotions
 
-    async def get_photo_faces(self, photo_uri):
-        cached_faces = await self.faces_repository.get_faces(photo_uri)
+    async def get_photo_faces(self, photo_uri, photo_id):
+        cached_faces = await self.faces_repository.get_faces(photo_id)
 
-        if not cached_faces:
+        if cached_faces is None:
             faces = await self._fetch_photo_faces(photo_uri)
-            await self.faces_repository.save_faces(faces, photo_uri)
+            if faces:
+                await self.faces_repository.save_faces(faces, photo_id)
         else:
-            app_log.debug(
-                "Face++Service: get cached faces for {}".format(photo_uri))
             faces = cached_faces
 
         return faces
