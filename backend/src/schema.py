@@ -119,8 +119,8 @@ class Query(graphene.ObjectType):
         `filters` param is list of emotion titles
     """
     async def resolve_photos(self, info, filters, limit, page):
-        flickr_service = service_locator.flickr_service
-        photos = await flickr_service.get_photos(page, limit)
+        photo_service = service_locator.photo_service
+        photos = await photo_service.get_photos(page, limit)
         return map(Photo.map, photos)
 
     def resolve_emotions(self, info, limit):
