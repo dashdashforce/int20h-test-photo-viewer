@@ -3,13 +3,13 @@
 from __future__ import absolute_import, division, print_function
 
 from collections import OrderedDict
+from pprint import pprint
 
 import graphene
 from tornado import gen
+from tornado.log import app_log
 
 from .services import service_locator
-from tornado.log import app_log
-from pprint import pprint
 
 
 class Emotion(graphene.ObjectType):

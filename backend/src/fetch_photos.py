@@ -1,5 +1,7 @@
-from .services import service_locator
 from pprint import pprint
+
+from .services import service_locator
+
 photo_service = service_locator.photo_service
 
 page = 1
