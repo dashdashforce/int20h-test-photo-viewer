@@ -3,8 +3,8 @@
 from __future__ import absolute_import, division, print_function
 
 from graphene_tornado.tornado_graphql_handler import TornadoGraphQLHandler
-from tornado.web import Application
 from tornado.log import app_log
+from tornado.web import Application
 
 from .schema import schema
 

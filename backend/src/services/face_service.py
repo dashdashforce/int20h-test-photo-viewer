@@ -4,8 +4,8 @@ from urllib.parse import urlencode
 
 from tornado.log import app_log
 
-from ..repository import FacesRepository, EmotionsRepository
 from ..clients import FacePlusPlusApiClient
+from ..repository import EmotionsRepository, FacesRepository
 
 
 class FaceService:
