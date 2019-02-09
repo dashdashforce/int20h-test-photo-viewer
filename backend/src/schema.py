@@ -128,10 +128,10 @@ class Query(graphene.ObjectType):
         emotions = faceplusplus_service.get_emotions()[:limit]
         return map(lambda title: Emotion(title), emotions)
 
-    def resolve_faces(self, info, limit, emotion):
+    async def resolve_faces(self, info, limit, emotion):
         faceplusplus_service = service_locator.faceplusplus_service
-        emotions = faceplusplus_service.get_photo_faces_by_emotion(emotion)[:limit]
-        return map(lambda title: Emotion(title), emotions)
+        faces = faceplusplus_service.get_photo_faces_by_emotion(emotion)[:limit]
+        return map(lambda title: Face(title), faces)
 
 
 schema = graphene.Schema(query=Query)

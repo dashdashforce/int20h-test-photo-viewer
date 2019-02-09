@@ -33,13 +33,12 @@ class FacesRepository:
             return None
 
     async def get_faces_by_emotion(self, emotion):
-        result = await self.collection.find_one({
+        result = await self.collection.find({
             'faces.{}'.format(emotion) : {"$gt": 40 }})
         if result:
-            faces = result['faces']
             app_log.debug(
                 'FacesRepository: get faces from cache for {} emotion'.format(emotion))
-            return faces
+            return result
         else:
             return None
 
