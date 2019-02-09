@@ -5,7 +5,7 @@ RUN apt-get update \
 COPY . /backend
 WORKDIR /backend
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements/prod.txt
 
 EXPOSE 8888
 
