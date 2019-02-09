@@ -5,6 +5,8 @@ from __future__ import absolute_import, division, print_function
 import logging
 import os
 import sys
+import re
+
 
 import tornado.ioloop
 import tornado.web
@@ -53,6 +55,23 @@ class PhotoViewerApplication(Application):
         return (u'%(color)s[%(levelname)1.1s %(asctime)s.%(msecs).03d '
                 u'%(name)s]%(end_color)s %(message)s')
 
+    allow_origin = Unicode(
+        '*', config=True,
+        help="""Set the Access-Control-Allow-Origin header
+        Use '*' to allow any origin to access your server.
+        Takes precedence over allow_origin_pat.
+        """
+    )
+    allow_origin_pat = Unicode(
+        '', config=True,
+        help="""Use a regular expression for the Access-Control-Allow-Origin header
+        Requests from an origin matching the expression will get replies with:
+            Access-Control-Allow-Origin: origin
+        where `origin` is the origin of the request.
+        Ignored if allow_origin is set.
+        """
+    )
+
     ip = Unicode(
         '', config=True,
         help='The IP address the server will listen on.'
@@ -81,6 +100,10 @@ class PhotoViewerApplication(Application):
         logger.setLevel(self.log.level)
 
     def init_webapp(self):
+        self.application_settings['allow_origin'] = self.allow_origin
+        if self.allow_origin_pat:
+            self.application_settings['allow_origin_pat'] = re.compile(
+                self.allow_origin_pat)
         self.application_settings['debug'] = self.debug
 
         self.web_app = PhotoViewerApiApplication(self.application_settings)

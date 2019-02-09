@@ -7,9 +7,10 @@ from tornado.log import app_log
 from tornado.web import Application
 
 from .schema import schema
+from .cors import CORSRequestHandler
 
 
-class MainApplicationHandler(TornadoGraphQLHandler):
+class MainApplicationHandler(CORSRequestHandler, TornadoGraphQLHandler):
 
     async def execute_graphql_request(self, method, query, variables, operation_name, show_graphiql=False):
         app_log.debug("Execution GraphQL request: {}".format(query))
