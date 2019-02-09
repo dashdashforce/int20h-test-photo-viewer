@@ -8,6 +8,7 @@ import logging
 
 import tornado.ioloop
 import tornado.web
+from tornado import process
 from tornado.log import LogFormatter, app_log, access_log, gen_log
 from tornado.httpserver import HTTPServer
 from traitlets import Bool, Dict, Integer, Unicode
@@ -16,6 +17,7 @@ from dotenv import find_dotenv, load_dotenv
 
 from .version import __version__
 from .web_app import PhotoViewerApiApplication
+from .jobs import PhotoFetchingJob
 
 load_dotenv(find_dotenv())
 
@@ -66,6 +68,8 @@ class PhotoViewerApplication(Application):
         help='tornado.web.Application settings.'
     )
 
+    photo_fetching_job = PhotoFetchingJob()
+
     def init_logging(self):
         self.log.propagate = False
         for log in app_log, access_log, gen_log:
@@ -101,6 +105,10 @@ class PhotoViewerApplication(Application):
     def start(self):
         super(PhotoViewerApplication, self).start()
         self.io_loop = tornado.ioloop.IOLoop.current()
+        
+        
+        self.photo_fetching_job.start()
+
         app_log.info('Server started on port: {}'.format(self.port))
         app_log.debug('Debug mode: {}'.format(self.debug))
 
