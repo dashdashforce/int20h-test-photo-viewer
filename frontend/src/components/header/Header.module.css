@@ -1,0 +1,14 @@
+.team {
+    border-bottom: 1px solid #40514E;
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 700;
+    color: #40514E;
+    padding: 8px 0;
+    letter-spacing: 0.05em;
+}
+
+.title {
+    letter-spacing: 0.05em;
+    font-weight: 900;
+}
