@@ -10,6 +10,3 @@ install-prod:
 
 run-dev:
 	./venv/bin/python run.py
-
-run-docker:
-	cd ../ && docker-compose up --build backend
