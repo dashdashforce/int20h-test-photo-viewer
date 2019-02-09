@@ -3,19 +3,18 @@
 from __future__ import absolute_import, division, print_function
 
 from graphene_tornado.tornado_graphql_handler import TornadoGraphQLHandler
-from tornado.web import Application
 from tornado.log import app_log
+from tornado.web import Application
 
 from .schema import schema
 
 
 class MainApplicationHandler(TornadoGraphQLHandler):
 
-    
     async def execute_graphql_request(self, method, query, variables, operation_name, show_graphiql=False):
         app_log.debug("Execution GraphQL request: {}".format(query))
         return await super(MainApplicationHandler, self).execute_graphql_request(
-                method, query, variables, operation_name, show_graphiql
+            method, query, variables, operation_name, show_graphiql
         )
 
 

@@ -3,13 +3,13 @@
 from __future__ import absolute_import, division, print_function
 
 from collections import OrderedDict
+from pprint import pprint
 
 import graphene
 from tornado import gen
+from tornado.log import app_log
 
 from .services import service_locator
-from tornado.log import app_log
-from pprint import pprint
 
 
 class Emotion(graphene.ObjectType):
@@ -74,8 +74,8 @@ class Photo(graphene.ObjectType):
     faces = graphene.List(Face)
 
     async def resolve_faces(self, info):
-        faceplusplus_service = service_locator.faceplusplus_service
-        faces = await faceplusplus_service.get_photo_faces(self.sizes.large.url, self.id)
+        face_service = service_locator.face_service
+        faces = await face_service.get_photo_faces(self.sizes.large.url, self.id)
         return map(Face.map, faces)
 
     @classmethod
@@ -119,13 +119,13 @@ class Query(graphene.ObjectType):
         `filters` param is list of emotion titles
     """
     async def resolve_photos(self, info, filters, limit, page):
-        flickr_service = service_locator.flickr_service
-        photos = await flickr_service.get_photos(page, limit)
+        photo_service = service_locator.photo_service
+        photos = await photo_service.get_photos(page, limit)
         return map(Photo.map, photos)
 
     def resolve_emotions(self, info, limit):
-        faceplusplus_service = service_locator.faceplusplus_service
-        emotions = faceplusplus_service.get_emotions()[:limit]
+        face_service = service_locator.face_service
+        emotions = face_service.get_emotions()[:limit]
         return map(lambda title: Emotion(title), emotions)
 
 
