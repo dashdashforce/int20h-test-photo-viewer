@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  deploy-backend:
+    docker:
+      - image: python:3.7-slim
+    context: ddforce-photo-viewer
+    steps:
+      - run:
+          name: setup ssh keys
+          command: |
+            'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+            eval $(ssh-agent -s)
+            ssh-add <(echo "$SSH_PRIVATE_KEY")
+            mkdir -p ~/.ssh
+            '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+      - run:
+          name: deploy app
+          command: |
+            ssh $SSH_USER@SSH_HOST << EOF
+            cd ./int20h-test-photo-viewer
+            git fetch
+            git pull origin $CIRCLE_BRANCH --rebase
+            docker-compose up -d --no-deps --build backend
+            EOF
+
+
+workflows:
+  version: 2
+
+  backend-deploy-flow:
+    jobs:
+      - deploy-backend:
+          filters:
+            only: 
+              - backend
+              - master
+            
