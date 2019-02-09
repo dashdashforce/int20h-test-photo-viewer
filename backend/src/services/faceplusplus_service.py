@@ -46,6 +46,11 @@ class FacePlusPlusService:
 
         return faces
 
+    async def get_photo_faces_by_emotion(self, emotion):
+        cached_faces = await self.faces_repository.get_faces_by_emotion(emotion)
+
+        return cached_faces
+
     async def _fetch_photo_faces(self, photo_uri):
         request = self._build_request(photo_uri)
         try:
