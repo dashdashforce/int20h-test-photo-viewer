@@ -1,0 +1,44 @@
+.button {
+    -webkit-appearance: none;
+    border: 2px solid transparent;
+    background: none;
+    font-family: inherit;
+    padding: 10px 25px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.08);
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 0.05em;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.button:focus {
+    outline: none;
+}
+
+.buttonHighlight {
+    border: 2px solid #2F89FC;
+    box-shadow: none;
+}
+
+.icon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    margin-right: 16px;
+}
+
+.caption {
+    flex: 1 1 auto;
+    text-align: center;
+}

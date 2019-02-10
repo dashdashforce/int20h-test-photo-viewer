@@ -5,6 +5,7 @@
   "dependencies": {
     "@reach/router": "^1.2.1",
     "@types/jest": "24.0.0",
+    "@types/classnames": "^2.2.7",
     "@types/node": "10.12.24",
     "@types/reach__router": "^1.2.3",
     "@types/react": "16.8.2",
@@ -13,6 +14,7 @@
     "apollo-boost": "^0.1.27",
     "apollo-client": "^2.4.12",
     "app-location": "^1.0.2",
+    "classnames": "^2.2.6",
     "graphql": "^14.1.1",
     "react": "^16.8.1",
     "react-apollo": "^2.4.1",
