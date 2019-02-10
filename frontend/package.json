@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://ddforce.nckcol.com/photo-viewer",
   "dependencies": {
     "@reach/router": "^1.2.1",
     "@types/jest": "24.0.0",
@@ -27,7 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "rsync-build": "rsync -avz ./build/ ddforce@95.179.180.34:public/photo-viewer/"
   },
   "eslintConfig": {
     "extends": "react-app"
