@@ -1,4 +1,6 @@
 
+from tornado.web import HTTPError
+
 from ..clients import FlickrApiClient
 from ..repository.photos_repository import PhotosRepository
 
@@ -15,6 +17,15 @@ class PhotoService():
     """
     async def get_photos(self, first=20, after_photo=None):
         return await self.repository.get_photos(first, after_photo)
+
+    async def get_photo(self, id):
+        photo = await self.repository.get_photo(id)
+        if photo:
+            return photo
+        raise HTTPError(
+            status_code=404,
+            reason="Photo with id {} not found".format(id)
+        )
 
     async def get_filtered_photos(self, filters, first, after, map_func):
         filtering_page = first

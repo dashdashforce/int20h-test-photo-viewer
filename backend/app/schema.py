@@ -146,7 +146,9 @@ class Query(graphene.ObjectType):
             return photos
 
     async def resolve_photo(self, info, id):
-        return None
+        photo_service = service_locator.photo_service
+        photo = await photo_service.get_photo(id)
+        return Photo.map(photo)
 
     def resolve_emotions(self, info, limit):
         face_service = service_locator.face_service
