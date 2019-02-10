@@ -77,16 +77,16 @@ workflows:
                 - backend
           context: ddforce-photo-viewer
   
-  frontend-deploy-flow:
-    jobs:
-      - build-frontend
-      - deploy-frontend:
-          requires:
-            - build-frontend
-          filters:
-            branches:
-              only: master
-          context: ddforce-photo-viewer
+  # frontend-deploy-flow:
+  #   jobs:
+  #     - build-frontend
+  #     - deploy-frontend:
+  #         requires:
+  #           - build-frontend
+  #         filters:
+  #           branches:
+  #             only: master
+  #         context: ddforce-photo-viewer
 
 
             
