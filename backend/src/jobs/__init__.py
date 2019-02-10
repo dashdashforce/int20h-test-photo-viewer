@@ -1,2 +1,0 @@
-
-from .photo_fetching_job import PhotoFetchingJob
