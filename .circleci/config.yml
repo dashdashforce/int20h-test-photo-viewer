@@ -26,8 +26,8 @@ jobs:
       - image: node:8.15.0-alpine
     steps:
       - checkout
-      - run: cd ~/project/frontend && npm install
-      - run: cd ~/project/frontend && npm run build
+      - run: cd ~/project/frontend && yarn install
+      - run: cd ~/project/frontend && yarn run build
       - persist_to_workspace:
           root: ~/project/frontend
           paths:
