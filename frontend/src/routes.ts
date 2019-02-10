@@ -1,4 +1,11 @@
-function Location<T>(path: string, getUrl?: (parameters: T) => string) {
+type UrlCreatorWithParameters<T> = (parameters: T) => string;
+
+type UrlCreator = () => string;
+
+function Location<T>(
+  path: string,
+  getUrl?: UrlCreatorWithParameters<T> | UrlCreator,
+) {
   return {
     path,
     getUrl(parameters: T): string {
@@ -10,13 +17,13 @@ function Location<T>(path: string, getUrl?: (parameters: T) => string) {
   };
 }
 
-export const photoList = Location('/');
+export const photoList = Location('/photo-viewer');
 
 export interface PhotoLocationParameters {
   id: string;
 }
 
 export const photo = Location(
-  '/photo/:id',
-  ({id}: PhotoLocationParameters) => `/photo/${id}`,
+  '/photo-viewer/photo/:id',
+  ({id}: PhotoLocationParameters) => `/photo-viewer/photo/${id}`,
 );
