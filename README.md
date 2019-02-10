@@ -56,5 +56,5 @@ Now go to [Local frontend](http://localhost:3000) for checking out our awesome w
 
 - [Oleg Lipskiy](https://github.com/acterics)
 - [Nick Popov](https://github.com/nckcol)
-- [Max Kostinskiy](https://github.com/promojjj)
+- [Maksym Kostynkyi](https://github.com/promojjj)
 - [Andrey Neklesa](https://github.com/alad1chek)
