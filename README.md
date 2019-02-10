@@ -50,6 +50,7 @@ Now go to [Local frontend](http://localhost:3000) for checking out our awesome w
 ## Deployed App
 
 [Deployed Application](http://ddforce.nckcol.com/photo-viewer)
+
 [Deployed API Sandbox](http://ddforce.nckcol.com/photo-viewer/api/graphql)
 
 ## Contributors
