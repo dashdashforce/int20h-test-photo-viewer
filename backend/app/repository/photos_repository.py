@@ -1,6 +1,7 @@
 
 import os
 
+import pymongo
 from dotenv import find_dotenv, load_dotenv
 from motor.motor_tornado import MotorClient
 
@@ -26,9 +27,9 @@ class PhotosRepository():
                     'dateupload': {'$lt': after_photo['dateupload']}
                 }
 
-            ).sort('dateupload').to_list(length=first)
+            ).sort([('dateupload', pymongo.DESCENDING)]).to_list(length=first)
         else:
-            return await self.collection.find().sort('dateupload').to_list(length=first)
+            return await self.collection.find().sort([('dateupload', pymongo.DESCENDING)]).to_list(length=first)
 
     """
         TODO Implement optimize update or insert operation

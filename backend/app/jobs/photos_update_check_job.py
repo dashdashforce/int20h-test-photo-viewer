@@ -16,4 +16,5 @@ class PhotosUpdateCheckJob(ioloop.PeriodicCallback):
         TODO implement flickr api the most recent photo fetching
     """
     async def fetch_photos(self):
-        app_log.debug("Fetching photos")
+        pass
+        # app_log.debug("Fetching photos")

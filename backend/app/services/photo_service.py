@@ -17,10 +17,12 @@ class PhotoService():
         return await self.repository.get_photos(first, after_photo)
 
     async def get_filtered_photos(self, filters, first, after, map_func):
-        photos = list(map(map_func, await self.get_photos(first, after)))
+        filtering_page = first
+        photos = list(map(map_func, await self.get_photos(filtering_page, after)))
         filtered_photos = await self._get_filtered_photos(photos, filters)
         while len(filtered_photos) < first:
-            photos = list(map(map_func, await self.get_photos(first, photos[-1].id)))
+            filtering_page = first * 2
+            photos = list(map(map_func, await self.get_photos(filtering_page, photos[-1].id)))
             if len(photos) == 0:
                 break
             filtered_photos += await self._get_filtered_photos(photos, filters)
