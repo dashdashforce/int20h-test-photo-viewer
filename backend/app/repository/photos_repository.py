@@ -19,10 +19,19 @@ class PhotosRepository():
     """
 
     async def get_photos(self):
-        return None
+        return await self.collection.find().to_list(length=1000)
 
     """
-        TODO Implement async photo caching
+        TODO Implement optimize update or insert operation
     """
+
     async def save_photos(self, photos):
-        await self.collection.insert_many(photos)
+
+        await self.collection.insert_many(
+            map(self._normalize_photo, photos),
+            bypass_document_validation=True
+        )
+
+    def _normalize_photo(self, photo):
+        photo['_id'] = photo['id']
+        return photo
