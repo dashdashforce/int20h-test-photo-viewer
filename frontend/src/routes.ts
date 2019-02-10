@@ -1,4 +1,11 @@
-function Location<T>(path: string, getUrl?: (parameters: T) => string) {
+type UrlCreatorWithParameters<T> = (parameters: T) => string;
+
+type UrlCreator = () => string;
+
+function Location<T>(
+  path: string,
+  getUrl?: UrlCreatorWithParameters<T> | UrlCreator,
+) {
   return {
     path,
     getUrl(parameters: T): string {
