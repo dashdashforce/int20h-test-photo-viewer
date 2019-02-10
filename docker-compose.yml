@@ -2,5 +2,6 @@ version: '2.1'
 services:
   backend:
     build: backend
+    restart: on-failure
     ports:
       - 8888:8888
