@@ -17,7 +17,7 @@ from tornado.log import LogFormatter, access_log, app_log, gen_log
 from traitlets import Bool, Dict, Integer, Unicode
 from traitlets.config.application import Application, catch_config_error
 
-from .jobs import PhotoFetchingJob
+from .jobs import PhotosUpdateCheckJob
 from .version import __version__
 from .web_app import PhotoViewerApiApplication
 
@@ -87,7 +87,7 @@ class PhotoViewerApplication(Application):
         help='tornado.web.Application settings.'
     )
 
-    photo_fetching_job = PhotoFetchingJob()
+    photo_fetching_job = PhotosUpdateCheckJob()
 
     def init_logging(self):
         self.log.propagate = False

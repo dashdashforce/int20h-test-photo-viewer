@@ -1,2 +1,2 @@
 
-from .photo_fetching_job import PhotoFetchingJob
+from .photos_update_check_job import PhotosUpdateCheckJob
