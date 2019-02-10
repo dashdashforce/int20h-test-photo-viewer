@@ -18,8 +18,17 @@ class PhotosRepository():
         TODO Implement cached photo async retrieving. Maybe add some page arguments
     """
 
-    async def get_photos(self):
-        return await self.collection.find().to_list(length=1000)
+    async def get_photos(self, first, after):
+        if after:
+            after_photo = await self.collection.find_one({'id': after})
+            return await self.collection.find(
+                {
+                    'dateupload': {'$lt': after_photo['dateupload']}
+                }
+
+            ).sort('dateupload').to_list(length=first)
+        else:
+            return await self.collection.find().sort('dateupload').to_list(length=first)
 
     """
         TODO Implement optimize update or insert operation

@@ -15,15 +15,19 @@ class FacesRepository:
 
     async def save_faces(self, faces, photo_id):
         document = {
-            'faces': faces,
-            'photo_id': photo_id
+            '_id': photo_id,
+            'faces': faces
         }
         app_log.debug(
             'FacesRepository: saving faces in cache for photo {}'.format(photo_id))
-        result = await self.collection.insert_one(document)
+        try:
+            result = await self.collection.insert_one(document)
+        except Exception as e:
+            app_log.warn(
+                'Cannot save faces for photo {}: {}'.format(photo_id, faces))
 
     async def get_faces(self, photo_id):
-        result = await self.collection.find_one({'photo_id': photo_id})
+        result = await self.collection.find_one({'_id': photo_id})
         if result:
             faces = result['faces']
             app_log.debug(

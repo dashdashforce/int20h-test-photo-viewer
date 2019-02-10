@@ -27,6 +27,7 @@ class FaceRectangle(graphene.ObjectType):
 class Face(graphene.ObjectType):
     face_rectangle = graphene.Field(FaceRectangle)
     emotion = graphene.List(FaceEmotion)
+    top_emotion = graphene.String()
 
     @classmethod
     def map(cls, face_dict):
@@ -48,6 +49,15 @@ class Face(graphene.ObjectType):
         ]
 
         return Face(face_rectangle, face_emotions)
+
+    def resolve_top_emotion(self, info):
+        max_factor = 0
+        top_emotion = ''
+        for emotion_part in self.emotion:
+            if emotion_part.factor > max_factor:
+                max_factor = emotion_part.factor
+                top_emotion = emotion_part.title
+        return top_emotion
 
 
 class PhotoSize(graphene.ObjectType):
@@ -105,8 +115,8 @@ class Query(graphene.ObjectType):
     photos = graphene.List(Photo,
                            filters=graphene.List(
                                graphene.String, default_value=[]),
-                           limit=graphene.Int(default_value=20),
-                           page=graphene.Int(default_value=1))
+                           first=graphene.Int(default_value=20),
+                           after=graphene.Int(default_value=-1))
 
     emotions = graphene.List(Emotion, limit=graphene.Int(default_value=20))
 
@@ -114,10 +124,17 @@ class Query(graphene.ObjectType):
         TODO Implement photo filtering by emotions
         `filters` param is list of emotion titles
     """
-    async def resolve_photos(self, info, filters, limit, page):
+    async def resolve_photos(self, info, filters, first, after):
+        if after == -1:
+            after = None
         photo_service = service_locator.photo_service
-        photos = await photo_service.get_photos(page, limit)
-        return map(Photo.map, photos)
+
+        if len(filters) != 0:
+            return photo_service.get_filtered_photos(filters, first, after, Photo.map)
+        else:
+            photos = await photo_service.get_photos(first, after)
+            photos = map(Photo.map, photos)
+            return photos
 
     def resolve_emotions(self, info, limit):
         face_service = service_locator.face_service

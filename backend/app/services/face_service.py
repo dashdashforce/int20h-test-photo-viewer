@@ -23,8 +23,7 @@ class FaceService:
 
         if cached_faces is None:
             faces = await self.client.fetch_photo_faces(photo_uri)
-            if faces:
-                await self.faces_repository.save_faces(faces, photo_id)
+            await self.faces_repository.save_faces(faces, photo_id)
         else:
             faces = cached_faces
 
