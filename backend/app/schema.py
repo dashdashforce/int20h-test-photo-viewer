@@ -78,7 +78,7 @@ class Photo(graphene.ObjectType):
     title = graphene.String()
     sizes = graphene.Field(PhotoSizes)
     upload_date = graphene.String()
-
+    views = graphene.Int()
     faces = graphene.List(Face)
 
     async def resolve_faces(self, info):
@@ -110,6 +110,7 @@ class Photo(graphene.ObjectType):
         upload_timestamp = int(photo_dict['dateupload'])
         upload_date = datetime.fromtimestamp(upload_timestamp).isoformat()
 
+        views = photo_dict['views']
         return Photo(
             id,
             title,
