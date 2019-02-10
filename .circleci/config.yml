@@ -28,20 +28,21 @@ jobs:
       - checkout
       - run: cd ~/project/frontend && yarn install
       - run: cd ~/project/frontend && yarn run build
-      - persist_to_workspace:
-          root: ~/project/frontend
+      - save_cache:
+          key: build-cache
           paths:
-            - build
+            - ~/project/frontend/build
   
   deploy-frontend:
     docker:
       - image: rastasheep/ubuntu-sshd
     steps:
-      
       - add_ssh_keys:
           fingerprints:
             - "44:ec:8d:af:98:49:d4:27:59:41:ae:f5:9b:8b:87:a5"
       - checkout
+      - restore_cache:
+          keys: build-cache
       - attach_workspace:
           at: ~/repo/frontend/build
       - run:
