@@ -12,7 +12,7 @@ class PhotoService():
     async def get_photos(self, page, limit):
         cached_photos = await self.repository.get_photos()
         if not cached_photos:
-            photos = await self.client.fetch_photos(page, limit)
+            photos = await self.client.fetch_album_photos(page, limit)
             await self.repository.save_photos(photos)
         else:
             photos = cached_photos

@@ -16,11 +16,13 @@ load_dotenv(find_dotenv())
 
 class FlickrApiClient:
 
+    default_tag = '#int20h'
+
     def __init__(self):
         self.client = AsyncHTTPClient()
         self.sync_client = HTTPClient()
 
-    async def fetch_photos(self, page, limit):
+    async def fetch_album_photos(self, page, limit):
         uri = self._build_album_request_uri(page, limit)
         app_log.debug('FlickrService: fetching photos from {}'.format(uri))
         try:
@@ -30,9 +32,9 @@ class FlickrApiClient:
                 'FlickrService: error while fetching photos: {}'.format(e)
             )
             raise e
-        return json_decode(response.body)['photoset']['photo']
+        return json_decode(response.body)['photoset']
 
-    def fetch_photos_sync(self, page, limit):
+    def fetch_album_photos_sync(self, page, limit):
         uri = self._build_album_request_uri(page, limit)
         return json_decode(self.sync_client.fetch(uri).body.decode("utf-8"))
 
@@ -57,27 +59,29 @@ class FlickrApiClient:
             params=urlencode(params)
         )
 
-    async def search_photos_by_tag(self, tag, page, limit):
-        uri = self._build_search_request_uri(self, page, limit)
+    async def fetch_photos_by_tag(self, page, limit):
+        uri = self._build_search_request_uri(page, limit)
         try:
             response = await self.client.fetch(uri)
         except Exception as e:
             app_log.error(
-                'FlickrService: error while fetching photos by tag {}: {}'.format(
-                    tag, e)
+                'FlickrService: error while fetching photos by tag: {}'
+                .format(e)
             )
             raise e
         return json_decode(response.body)['photos']
 
-    def _build_search_request_uri(self, tag, page, limit):
+    def _build_search_request_uri(self, page, limit):
         extras = [
             'url_l', 'url_m', 'url_s', 'tags'
         ]
         params = (
             ('method', 'flickr.photos.search'),
             ('api_key', os.getenv("FLICKR_API_KEY")),
-            ('tags', tag),
+            ('tags', self.default_tag),
             ('page', page),
+            ('format', 'json'),
+            ('nojsoncallback', 1),
             ('per_page', limit),
             ('extras', ','.join(extras))
 
