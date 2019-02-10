@@ -61,7 +61,6 @@ jobs:
       - checkout
       - restore_cache:
           keys: build-cache
-      
       - run:
           name: SSH frontend deploy
           command: rsync -avz --delete ~/project/frontend/build/ $SSH_USER@$SSH_HOST:public/photo-viewer 

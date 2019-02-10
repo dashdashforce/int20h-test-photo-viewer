@@ -1,12 +1,26 @@
+.layout {
+    display: flex;
+    margin: 32px 0;
+}
+
+.leftCol {
+    flex: 0 0 auto;
+}
+
+.rightCol {
+    flex: 1 1 auto;
+    margin-left: 32px;
+}
+
 .root {
     position: relative;
     border-radius: 8px;
-    width: 840px;
+    width: 640px;
     overflow: hidden;
 }
 
 .photo {
-    width: 840px;
+    width: 640px;
     vertical-align: middle;
 }
 
