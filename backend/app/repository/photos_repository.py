@@ -39,7 +39,8 @@ class PhotosRepository():
         return await self.collection.find_one({'_id': id})
 
     async def save_photos(self, photos):
-        async for document in map(self._normalize_photo, photos):
+        photo_documents = list(map(self._normalize_photo, photos))
+        for document in photo_documents:
             photo = self.collection.find_one({'_id': document['id']})
             if photo:
                 await self.collection.update_one({'_id': document['_id']}, {'$set': document})

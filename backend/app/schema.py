@@ -1,4 +1,5 @@
 
+import re
 from collections import OrderedDict
 from datetime import datetime
 
@@ -78,6 +79,8 @@ class Photo(graphene.ObjectType):
     title = graphene.String()
     sizes = graphene.Field(PhotoSizes)
     upload_date = graphene.String()
+    views = graphene.Int()
+    tags = graphene.List(graphene.String)
 
     faces = graphene.List(Face)
 
@@ -110,11 +113,17 @@ class Photo(graphene.ObjectType):
         upload_timestamp = int(photo_dict['dateupload'])
         upload_date = datetime.fromtimestamp(upload_timestamp).isoformat()
 
+        views = photo_dict['views']
+
+        tags = re.split('\s+', photo_dict['tags'])
+        print(tags)
         return Photo(
             id,
             title,
             PhotoSizes(small_size, medium_size, large_size),
-            upload_date
+            upload_date,
+            views,
+            tags
         )
 
 

@@ -40,7 +40,8 @@ class FlickrApiClient:
 
     def _build_album_request_uri(self, page, limit):
         extras = [
-            'url_l', 'url_m', 'url_s', 'tags', 'date_upload'
+            'url_l', 'url_m', 'url_s',
+            'tags', 'date_upload', 'views'
         ]
         params = (
             ('method', os.getenv("FLICKR_GET_BY_ALBUM_METHOD")),
@@ -69,11 +70,11 @@ class FlickrApiClient:
                 .format(e)
             )
             raise e
-        return json_decode(response.body)['photos']['photo']
+        return json_decode(response.body)['photos']
 
     def _build_search_request_uri(self, page, limit):
         extras = [
-            'url_l', 'url_m', 'url_s', 'tags', 'date_upload'
+            'url_l', 'url_m', 'url_s', 'tags', 'date_upload', 'views'
         ]
         params = (
             ('method', 'flickr.photos.search'),
