@@ -1,5 +1,6 @@
 
 from collections import OrderedDict
+from datetime import datetime
 
 import graphene
 from tornado import gen
@@ -76,6 +77,7 @@ class Photo(graphene.ObjectType):
     id = graphene.ID()
     title = graphene.String()
     sizes = graphene.Field(PhotoSizes)
+    upload_date = graphene.String()
 
     faces = graphene.List(Face)
 
@@ -88,6 +90,7 @@ class Photo(graphene.ObjectType):
     def map(cls, photo_dict):
         id = photo_dict['id']
         title = photo_dict['title']
+
         large_size = PhotoSize(
             photo_dict['width_l'],
             photo_dict['height_l'],
@@ -104,10 +107,14 @@ class Photo(graphene.ObjectType):
             photo_dict['height_s'],
             photo_dict['url_s']
         )
+        upload_timestamp = int(photo_dict['dateupload'])
+        upload_date = datetime.fromtimestamp(upload_timestamp).isoformat()
+
         return Photo(
             id,
             title,
-            PhotoSizes(small_size, medium_size, large_size)
+            PhotoSizes(small_size, medium_size, large_size),
+            upload_date
         )
 
 
@@ -116,7 +123,7 @@ class Query(graphene.ObjectType):
                            filters=graphene.List(
                                graphene.String, default_value=[]),
                            first=graphene.Int(default_value=20),
-                           after=graphene.Int(default_value=-1))
+                           after=graphene.String(default_value=""))
 
     emotions = graphene.List(Emotion, limit=graphene.Int(default_value=20))
 
@@ -125,7 +132,7 @@ class Query(graphene.ObjectType):
         `filters` param is list of emotion titles
     """
     async def resolve_photos(self, info, filters, first, after):
-        if after == -1:
+        if len(after) == 0:
             after = None
         photo_service = service_locator.photo_service
 
