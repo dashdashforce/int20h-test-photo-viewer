@@ -35,12 +35,15 @@ class PhotosRepository():
         TODO Implement optimize update or insert operation
     """
 
+    async def get_photo(self, id):
+        return await self.collection.find_one({'_id': id})
+
     async def save_photos(self, photos):
         async for document in map(self._normalize_photo, photos):
             photo = self.collection.find_one({'_id': document['id']})
-            if photo: 
+            if photo:
                 await self.collection.update_one({'_id': document['_id']}, {'$set': document})
-            else: 
+            else:
                 await self.collection.insert_one(document)
 
     def _normalize_photo(self, photo):

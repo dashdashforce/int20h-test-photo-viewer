@@ -119,6 +119,8 @@ class Photo(graphene.ObjectType):
 
 
 class Query(graphene.ObjectType):
+    photo = graphene.Field(Photo, id=graphene.String())
+
     photos = graphene.List(Photo,
                            filters=graphene.List(
                                graphene.String, default_value=[]),
@@ -142,6 +144,11 @@ class Query(graphene.ObjectType):
             photos = await photo_service.get_photos(first, after)
             photos = map(Photo.map, photos)
             return photos
+
+    async def resolve_photo(self, info, id):
+        photo_service = service_locator.photo_service
+        photo = await photo_service.get_photo(id)
+        return Photo.map(photo)
 
     def resolve_emotions(self, info, limit):
         face_service = service_locator.face_service

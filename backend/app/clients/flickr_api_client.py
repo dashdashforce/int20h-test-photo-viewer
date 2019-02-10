@@ -43,7 +43,7 @@ class FlickrApiClient:
             'url_l', 'url_m', 'url_s', 'tags', 'date_upload'
         ]
         params = (
-            ('method', os.getenv("FICKR_GET_BY_ALBUM_METHOD")),
+            ('method', os.getenv("FLICKR_GET_BY_ALBUM_METHOD")),
             ('api_key', os.getenv("FLICKR_API_KEY")),
             ('photoset_id', os.getenv("FLICKR_ALBUM_ID")),
             ('user_id', os.getenv("FLICKR_USER_ID")),
