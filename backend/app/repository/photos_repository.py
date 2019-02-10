@@ -36,11 +36,12 @@ class PhotosRepository():
     """
 
     async def save_photos(self, photos):
-
-        await self.collection.insert_many(
-            map(self._normalize_photo, photos),
-            bypass_document_validation=True
-        )
+        async for document in map(self._normalize_photo, photos):
+            photo = self.collection.find_one({'_id': document['id']})
+            if photo: 
+                await self.collection.update_one({'_id': document['_id']}, {'$set': document})
+            else: 
+                await self.collection.insert_one(document)
 
     def _normalize_photo(self, photo):
         photo['_id'] = photo['id']
