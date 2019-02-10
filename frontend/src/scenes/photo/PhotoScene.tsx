@@ -18,6 +18,7 @@ const PHOTO_BY_ID = gql`
   query Photo($id: String) {
     photo(id: $id) {
       id
+      title
       sizes {
         large {
           url
@@ -37,6 +38,9 @@ const PHOTO_BY_ID = gql`
           factor
         }
       }
+      uploadDate
+      views
+      tags
     }
   }
 `;
