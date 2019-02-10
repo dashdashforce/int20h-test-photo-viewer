@@ -37,6 +37,9 @@ class FlickrApiClient:
         return json_decode(self.sync_client.fetch(uri).body.decode("utf-8"))
 
     def _build_album_request_uri(self, page, limit):
+        extras = [
+            'url_l', 'url_m', 'url_s', 'tags'
+        ]
         params = (
             ('method', os.getenv("FICKR_GET_BY_ALBUM_METHOD")),
             ('api_key', os.getenv("FLICKR_API_KEY")),
@@ -46,9 +49,39 @@ class FlickrApiClient:
             ('per_page', limit),
             ('format', 'json'),
             ('nojsoncallback', 1),
-            ('extras', 'url_l,url_m,url_s')
+            ('extras', ','.join(extras))
         )
 
+        return "{root}?{params}".format(
+            root=os.getenv("FLICKR_URI"),
+            params=urlencode(params)
+        )
+
+    async def search_photos_by_tag(self, tag, page, limit):
+        uri = self._build_search_request_uri(self, page, limit)
+        try:
+            response = await self.client.fetch(uri)
+        except Exception as e:
+            app_log.error(
+                'FlickrService: error while fetching photos by tag {}: {}'.format(
+                    tag, e)
+            )
+            raise e
+        return json_decode(response.body)['photos']
+
+    def _build_search_request_uri(self, tag, page, limit):
+        extras = [
+            'url_l', 'url_m', 'url_s', 'tags'
+        ]
+        params = (
+            ('method', 'flickr.photos.search'),
+            ('api_key', os.getenv("FLICKR_API_KEY")),
+            ('tags', tag),
+            ('page', page),
+            ('per_page', limit),
+            ('extras', ','.join(extras))
+
+        )
         return "{root}?{params}".format(
             root=os.getenv("FLICKR_URI"),
             params=urlencode(params)
