@@ -1,20 +1,33 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import absolute_import, division, print_function
+import os
 
-"""
-    TODO Integrate repository with db
-"""
+from motor.motor_tornado import MotorClient
+from tornado.log import app_log
+
+
 class FacesRepository:
 
     def __init__(self):
-        self.faces_cache = {}
+        db_url = os.getenv("MONGODB_URL")
+        db_name = os.getenv("MONGODB_DB")
+        self.collection = MotorClient(db_url)[db_name].faces
 
-    async def save_faces(self, faces, photo_uri):
-        self.faces_cache[photo_uri] = faces
+    async def save_faces(self, faces, photo_id):
+        document = {
+            'faces': faces,
+            'photo_id': photo_id
+        }
+        app_log.debug(
+            'FacesRepository: saving faces in cache for photo {}'.format(photo_id))
+        result = await self.collection.insert_one(document)
 
-    async def get_faces(self, photo_uri):
-        if photo_uri in self.faces_cache:
-            return self.faces_cache[photo_uri]
+    async def get_faces(self, photo_id):
+        result = await self.collection.find_one({'photo_id': photo_id})
+        if result:
+            faces = result['faces']
+            app_log.debug(
+                'FacesRepository: get faces from cache for photo {}, faces: {}'.format(photo_id, faces))
+            return faces
         else:
             return None

@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, division, print_function
 
 from collections import OrderedDict
 
 import graphene
 from tornado import gen
+from tornado.log import app_log
 
 from .services import service_locator
-from tornado.log import app_log
-from pprint import pprint
 
 
 class Emotion(graphene.ObjectType):
@@ -35,7 +31,10 @@ class Face(graphene.ObjectType):
     @classmethod
     def map(cls, face_dict):
         face_rectangle_dict = face_dict['face_rectangle']
-        emotion_factors = face_dict['attributes']['emotion']
+        if 'attributes' in face_dict:
+            emotion_factors = face_dict['attributes']['emotion']
+        else:
+            emotion_factors = {}
 
         face_rectangle = FaceRectangle(
             face_rectangle_dict['height'],
@@ -71,8 +70,8 @@ class Photo(graphene.ObjectType):
     faces = graphene.List(Face)
 
     async def resolve_faces(self, info):
-        faceplusplus_service = service_locator.faceplusplus_service
-        faces = await faceplusplus_service.get_photo_faces(self.sizes.large.url)
+        face_service = service_locator.face_service
+        faces = await face_service.get_photo_faces(self.sizes.large.url, self.id)
         return map(Face.map, faces)
 
     @classmethod
@@ -116,13 +115,13 @@ class Query(graphene.ObjectType):
         `filters` param is list of emotion titles
     """
     async def resolve_photos(self, info, filters, limit, page):
-        flickr_service = service_locator.flickr_service
-        photos = await flickr_service.get_photos(page, limit)
+        photo_service = service_locator.photo_service
+        photos = await photo_service.get_photos(page, limit)
         return map(Photo.map, photos)
 
     def resolve_emotions(self, info, limit):
-        faceplusplus_service = service_locator.faceplusplus_service
-        emotions = faceplusplus_service.get_emotions()[:limit]
+        face_service = service_locator.face_service
+        emotions = face_service.get_emotions()[:limit]
         return map(lambda title: Emotion(title), emotions)
 
 
