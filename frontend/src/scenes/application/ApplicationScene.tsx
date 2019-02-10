@@ -5,14 +5,16 @@ import {Router} from '@reach/router';
 import PhotoScene from '../photo/PhotoScene';
 import ApplicationLayout from '../../components/application-layout/ApplicationLayout';
 
+import * as routes from '../../routes';
+
 export interface ApplicationSceneProps {}
 
 const ApplicationScene: React.SFC<ApplicationSceneProps> = () => {
   return (
     <ApplicationLayout>
       <Router>
-        <PhotoListScene path="/" />
-        <PhotoScene path="/photo/:id" />
+        <PhotoListScene path={routes.photoList.path} />
+        <PhotoScene path={routes.photo.path} />
       </Router>
     </ApplicationLayout>
   );
