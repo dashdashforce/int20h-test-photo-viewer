@@ -12,7 +12,7 @@ class FaceService:
 
     def __init__(self):
         self.faces_repository = FacesRepository()
-        self.emotions_repository = EmotionsRepository
+        self.emotions_repository = EmotionsRepository()
         self.client = FacePlusPlusApiClient()
 
     def get_emotions(self):
