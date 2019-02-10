@@ -19,7 +19,7 @@ In project root run command
 
 `docker-compose up --build backend`
 
-#### Manual
+#### Manual backend install
 
 You'll need Python 3.7 for starting app
 
@@ -33,4 +33,28 @@ You can try to check api sandbox: [Local sandbox](http://localhost:8888/graphql)
 
 ### Frontend
 
-**TODO: Write frontend start instruction**
+For starting frontend app you'll need Node latest version
+
+#### Manual frontend install
+
+1. Go to the `frontend` directory in the project root
+2. Run `yarn install` for installing frontend dependencies
+3. If you want to use local api server - change Apollo Client
+uri field in `project/frontend/src/index.tsx` to `localhost:8888`.
+4. Run `yarn start` for starting frontend
+
+Frontend is running on `localhost:3000`
+
+Now go to [Local frontend](http://localhost:3000) for checking out our awesome web app.
+
+## Deployed App
+
+[Deployed Application](http://ddforce.nckcol.com/photo-viewer)
+[Deployed API Sandbox](http://ddforce.nckcol.com/photo-viewer/api/graphql)
+
+## Contributors
+
+- [Oleg Lipskiy](https://github.com/acterics)
+- [Nick Popov](https://github.com/nckcol)
+- [Max Kostinskiy](https://github.com/promojjj)
+- [Andrey Neklesa](https://github.com/alad1chek)
