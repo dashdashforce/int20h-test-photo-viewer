@@ -21,6 +21,33 @@ jobs:
             git reset --hard origin/$CIRCLE_BRANCH
             exit
 
+  build-frontend:
+    docker:
+      - image: node:8.15.0-alpine
+    steps:
+      - checkout
+      - run: cd ~/project/frontend && npm install
+      - run: cd ~/project/frontend && npm run build
+      - persist_to_workspace:
+          root: ~/project/frontend
+          paths:
+            - build
+  
+  deploy-frontend:
+    docker:
+      - image: rastasheep/ubuntu-sshd
+    steps:
+      
+      - add_ssh_keys:
+          fingerprints:
+            - "44:ec:8d:af:98:49:d4:27:59:41:ae:f5:9b:8b:87:a5"
+      - checkout
+      - attach_workspace:
+          at: ~/repo/frontend/build
+      - run:
+          name: SSH frontend deploy
+          command: rsync -avz --delete ~/repo/frontend/build/ $SSH_USER@$SSH_HOST/public/photo-viewer 
+        
 workflows:
   version: 2
   backend-deploy-flow:
@@ -32,6 +59,16 @@ workflows:
                 - master
                 - backend
           context: ddforce-photo-viewer
+  
+  frontend-deploy-flow:
+    jobs:
+      - build-frontend
+      - deploy-frontend:
+          requires:
+            - build-frontend
+          filters:
+            branches:
+              only: master
 
 
             
