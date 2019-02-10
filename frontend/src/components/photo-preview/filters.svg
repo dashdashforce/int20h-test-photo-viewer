@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <filter id="sepia" width="120%" height="120%" x="-10%" y="-10%" color-interpolation-filters="sRGB" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
+        <feColorMatrix in="SourceGraphic" result="colormatrix" type="matrix" values="0 1 0 0 0
+            0 1 0 0 0
+            0 1 0 0 0
+            0 0 0 1 0"/>
+        <feComponentTransfer in="colormatrix" result="componentTransfer">
+            <feFuncR tableValues="0.24 1" type="table"/>
+            <feFuncG tableValues="0.31 1" type="table"/>
+            <feFuncB tableValues="0.3 1" type="table"/>
+            <feFuncA tableValues="0 1" type="table"/>
+        </feComponentTransfer>
+        <feBlend in="componentTransfer" in2="SourceGraphic" mode="normal" result="blend"/>
+    </filter>
+    <filter id="sepia-2" width="120%" height="120%" x="-10%" y="-10%" color-interpolation-filters="sRGB" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse">
+        <feColorMatrix in="SourceGraphic" result="colormatrix" type="matrix" values="0 1 0 0 0
+            0 1 0 0 0
+            0 1 0 0 0
+            0 0 0 1 0"/>
+        <feComponentTransfer in="colormatrix" result="componentTransfer">
+            <feFuncR tableValues="0.25 0.91 1" type="table"/>
+            <feFuncG tableValues="0.32 0.91 1" type="table"/>
+            <feFuncB tableValues="0.31 0.91 1" type="table"/>
+            <feFuncA tableValues="0 1" type="table"/>
+        </feComponentTransfer>
+        <feBlend in="componentTransfer" in2="SourceGraphic" mode="normal" result="blend"/>
+    </filter>
+</svg>

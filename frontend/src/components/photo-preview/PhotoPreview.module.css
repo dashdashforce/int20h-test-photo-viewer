@@ -1,0 +1,54 @@
+.block {
+    border-radius: 8px;
+    overflow: hidden;
+    display: inline-block;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+}
+
+.photo {
+    vertical-align: middle;
+    width: 100%;
+    transition: transform .3s ease;
+}
+
+.blockBlur .photo {
+    filter: url(./filters.svg#sepia-2);
+}
+
+.block:hover .photo {
+    transform: scale(1.1);
+}
+
+.noPhotoCaption {
+    color: #fff;
+    font-weight: 700;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 8px;
+    min-height: 80px;
+
+
+     background-image: linear-gradient(
+        to bottom,
+        hsla(169, 12%, 28%, 0.702) 0%,
+        hsla(169, 12%, 28%, 0.691) 8.1%,
+        hsla(169, 12%, 28%, 0.666) 15.5%,
+        hsla(169, 12%, 28%, 0.627) 22.5%,
+        hsla(169, 12%, 28%, 0.577) 29%,
+        hsla(169, 12%, 28%, 0.519) 35.3%,
+        hsla(169, 12%, 28%, 0.454) 41.2%,
+        hsla(169, 12%, 28%, 0.385) 47.1%,
+        hsla(169, 12%, 28%, 0.315) 52.9%,
+        hsla(169, 12%, 28%, 0.246) 58.8%,
+        hsla(169, 12%, 28%, 0.181) 64.7%,
+        hsla(169, 12%, 28%, 0.123) 71%,
+        hsla(169, 12%, 28%, 0.073) 77.5%,
+        hsla(169, 12%, 28%, 0.034) 84.5%,
+        hsla(169, 12%, 28%, 0.009) 91.9%,
+        hsla(169, 12%, 28%, 0) 100%
+      );
+}

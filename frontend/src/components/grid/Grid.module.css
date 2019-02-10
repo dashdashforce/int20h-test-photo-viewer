@@ -1,0 +1,12 @@
+.root {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -16px;
+}
+
+.item {
+    flex: 0 0 25%;
+    max-width: 25%;
+    padding: 16px;
+    box-sizing: border-box;
+}
