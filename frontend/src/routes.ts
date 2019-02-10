@@ -13,7 +13,7 @@ function Location<T>(path: string, getUrl?: (parameters: T) => string) {
 export const photoList = Location('/');
 
 export interface PhotoLocationParameters {
-  id: Number;
+  id: string;
 }
 
 export const photo = Location(

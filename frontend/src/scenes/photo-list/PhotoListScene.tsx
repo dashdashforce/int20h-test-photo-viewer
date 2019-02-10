@@ -7,12 +7,13 @@ import Loader from '../../components/loader/Loader';
 import PhotoPreview, {Photo} from '../../components/photo-preview/PhotoPreview';
 import Grid from '../../components/grid/Grid';
 import GridItem from '../../components/grid/GridItem';
+import EmotionFilter from '../../components/emotion-filter/EmotionFilter';
 
 export interface PhotoListSceneProps extends RouteComponentProps {}
 
 const PHOTO_LIST = gql`
-  {
-    photos {
+  query Photos($emotions: [String]) {
+    photos(filters: $emotions) {
       title
       id
       sizes {
@@ -39,10 +40,21 @@ const PHOTO_LIST = gql`
 `;
 
 const PhotoListScene: React.SFC<PhotoListSceneProps> = () => {
+  const [emotion, setEmotion] = React.useState<string | null>(null);
+
   return (
     <ContentContainer>
       <h2>Photo list</h2>
-      <Query query={PHOTO_LIST}>
+      <div style={{marginBottom: '24px'}}>
+        <EmotionFilter
+          current={emotion}
+          onChange={(emotion) => setEmotion(emotion)}
+        />
+      </div>
+      <Query
+        query={PHOTO_LIST}
+        variables={{emotions: emotion ? [emotion] : []}}
+      >
         {({loading, error, data}) => {
           if (loading) return <Loader />;
           if (error) return <p>Error :( {error}</p>;
