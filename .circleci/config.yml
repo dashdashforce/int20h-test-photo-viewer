@@ -38,7 +38,7 @@ jobs:
           name: Yarn build
           command: cd ~/project/frontend && yarn run build
       - save_cache:
-          key: build-cache
+          key: build-cache-$CIRCLE_WORKFLOW_ID
           paths:
             - ~/project/frontend/build
   
@@ -60,7 +60,7 @@ jobs:
       
       - checkout
       - restore_cache:
-          keys: build-cache
+          keys: build-cache-$CIRCLE_WORKFLOW_ID
       - run:
           name: SSH frontend deploy
           command: rsync -avz --delete ~/project/frontend/build/ $SSH_USER@$SSH_HOST:public/photo-viewer 
@@ -77,16 +77,16 @@ workflows:
                 - backend
           context: ddforce-photo-viewer
   
-  # frontend-deploy-flow:
-  #   jobs:
-  #     - build-frontend
-  #     - deploy-frontend:
-  #         requires:
-  #           - build-frontend
-  #         filters:
-  #           branches:
-  #             only: master
-  #         context: ddforce-photo-viewer
+  frontend-deploy-flow:
+    jobs:
+      - build-frontend
+      - deploy-frontend:
+          requires:
+            - build-frontend
+          filters:
+            branches:
+              only: master
+          context: ddforce-photo-viewer
 
 
             
