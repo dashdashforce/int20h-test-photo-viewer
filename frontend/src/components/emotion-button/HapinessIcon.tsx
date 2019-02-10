@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-export interface HapinessIconProps {}
+export interface HappinessIconProps {}
 
-const HapinessIcon: React.SFC<HapinessIconProps> = () => {
+const HappinessIcon: React.SFC<HappinessIconProps> = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
       <path
@@ -34,4 +34,4 @@ const HapinessIcon: React.SFC<HapinessIconProps> = () => {
   );
 };
 
-export default HapinessIcon;
+export default HappinessIcon;

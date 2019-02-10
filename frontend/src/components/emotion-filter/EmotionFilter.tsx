@@ -2,7 +2,7 @@ import * as React from 'react';
 import styles from './EmotionFilter.module.css';
 import EmotionButton from '../emotion-button/EmotionButton';
 import FearIcon from '../emotion-button/FearIcon';
-import HapinessIcon from '../emotion-button/HapinessIcon';
+import HappinessIcon from '../emotion-button/HapinessIcon';
 import NeutralIcon from '../emotion-button/NeutralIcon';
 import SadIcon from '../emotion-button/SadIcon';
 import SurpriseIcon from '../emotion-button/SurpriseIcon';
@@ -30,10 +30,10 @@ const EmotionFilter: React.SFC<EmotionFilterProps> = ({current, onChange}) => {
       <div className={styles.item}>
         <EmotionButton
           type="button"
-          icon={<HapinessIcon />}
-          caption="Hapiness"
-          highlight={current === 'hapiness'}
-          onClick={() => onChange('hapiness')}
+          icon={<HappinessIcon />}
+          caption="Happiness"
+          highlight={current === 'happiness'}
+          onClick={() => onChange('happiness')}
         />
       </div>
       <div className={styles.item}>
