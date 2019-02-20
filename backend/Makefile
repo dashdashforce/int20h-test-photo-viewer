@@ -12,5 +12,8 @@ install-prod:
 run-dev:
 	./venv/bin/python run.py
 
+run-dev-aiohttp:
+	./venv/bin/python run_aiohttp.py
+
 fetch-photos:
 	./venv/bin/python fetch_photos.py
